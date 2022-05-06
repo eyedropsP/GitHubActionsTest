@@ -26,14 +26,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Deployment
-        run: exit 0
+        run: exit 1
       
-      - if: success()
-        name: Notify deployment
+      - name: Notify deployment
         uses: 8398a7/action-slack@v3.8.0
         with:
           status: ${{ job.status }}
           author_name: 笑てたええねん
+          field: repo, message, commit, author, action, job, took, eventName, ref, workflow
+          if_mention: failure
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
