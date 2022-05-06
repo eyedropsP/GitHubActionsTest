@@ -33,7 +33,7 @@ jobs:
         with:
           status: ${{ job.status }}
           author_name: 笑てたええねん
-          field: repo, message, commit, author, action, job, took, eventName, ref, workflow
+          fields: repo, message, commit, author, action, job, took, eventName, ref, workflow
           if_mention: failure
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
