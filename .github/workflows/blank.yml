@@ -16,24 +16,24 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  check-bats-version:
+  Test:
+    name: Run the Test Job
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - WebGL
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Run Deployment
-        run: exit 0
-      
       - name: Notify deployment
-        uses: 8398a7/action-slack@v3.8.0
+        uses: 8398a7/action-slack@v3
         with:
+          job_name: 'Run the Test Job (${{ matrix.targetPlatform }})'
+          fields: job, took
           status: ${{ job.status }}
           author_name: わいわい「笑てたええねん」
-          fields: workflow,job,commit,repo,ref,author,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
