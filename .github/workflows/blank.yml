@@ -19,8 +19,8 @@ jobs:
   Test:
     name: Run the Test Job
     # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
-    strategy:
+    runs-on: ubuntu-latest
+      strategy:
       fail-fast: false
       matrix:
         targetPlatform:
