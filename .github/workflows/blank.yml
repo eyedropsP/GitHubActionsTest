@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm install -g bats
-      - if: failure()
+      - if: success()
         run: |
          echo success
          bats -v
