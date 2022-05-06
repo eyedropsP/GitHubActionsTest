@@ -35,8 +35,8 @@ jobs:
           custom_payload: |
             {
               text: "笑てたええねん",
-              atttachments: [{
-                "author_name": "おいたん",
+              attachments: [{
+                "author_name": "8398a7@action-slack", // json
                 fallback: 'fallback',
                 color: 'good',
                 title: 'CI Result',
@@ -48,7 +48,7 @@ jobs:
                 },
                 {
                   title: 'reverse',
-                  value: 'gnirts eserver'.split('').reverse().join(''),
+                  value: 'gnirts esrever'.split('').reverse().join(''),
                   short: true
                 },
                 {
@@ -57,7 +57,6 @@ jobs:
                   short: false
                 }],
                 actions: [{
-                }]
               }]
             }
         env:
