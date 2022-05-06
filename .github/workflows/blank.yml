@@ -26,15 +26,40 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Deployment
-        run: exit 1
+        run: exit 0
       
       - name: Notify deployment
         uses: 8398a7/action-slack@v3.8.0
         with:
-          status: ${{ job.status }}
-          author_name: 笑てたええねん
-          fields: repo, message, commit, author, action, job, took, eventName, ref, workflow
-          if_mention: failure
+          status: custom
+          custom_payload: |
+            {
+              text: "笑てたええねん",
+              atttachments: [{
+                "author_name": "おいたん",
+                fallback: 'fallback',
+                color: 'good',
+                title: 'CI Result',
+                text: 'Succeeded',
+                fields: [{
+                  title: 'lower case',
+                  value: 'LOWER CASE CHECK'.toLowerCase(),
+                  short: true
+                },
+                {
+                  title: 'reverse',
+                  value: 'gnirts eserver'.split('').reverse().join(''),
+                  short: true
+                },
+                {
+                  title: 'long title1',
+                  value: 'long value1',
+                  short: false
+                }],
+                actions: [{
+                }]
+              }]
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
