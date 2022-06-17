@@ -6,22 +6,25 @@ on:
   #   - cron: 0 1 * * 1 # At AM10:00 JST on Monday
 
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_NOLOGO: true
-  SLN_ROOT: src/FormatTest
-  DOTNET_SYSTEN_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1j
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  NUGET_XMLDOC_MODE: skip
+  SLN_ROOT: src/dotnet/
+  # colour output
+  DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   TERM: xterm
 
 jobs:
   lint_csharp:
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
-        
+
       # dotnet list
       - name: Obtain csproj to lint
         run: |
@@ -36,9 +39,9 @@ jobs:
       - name: Add dotnet-format problem matcher
         uses: xt0rted/dotnet-format-problem-matcher@v1
 
-      # dotnet formt
+      # dotnet format
       - name: Dotnet Format
-        run: dotnet format --verbosity diagonostic --exclude "console-fail-tests"
+        run: dotnet format --verbosity diagnostic --exclude "console-fail-tests"
         working-directory: ${{ env.SLN_ROOT }}
 
       # is change happen?
@@ -50,15 +53,16 @@ jobs:
       - name: List modified directories
         if: steps.git-check.outputs.modified == 'true'
         run: |
-          dires=$(git diff --dirstat=files){
+          dirs=$(git diff --dirstat=files)
+          {
             echo "CHANGED_DIRS<<EOF"
             echo "${dirs}"
-            ehco "EOF"
+            echo "EOF"
           } >> "$GITHUB_ENV"
-        
+
       # get files stats
       - name: List modified files
-        if: steps.git-check.output.modified == 'true'
+        if: steps.git-check.outputs.modified == 'true'
         run: |
           files=$(git diff --name-only)
           {
@@ -67,7 +71,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      # Commit if change happen, then create PR. force push when branch/pr already exists.
+      # Commit if change happen, then craete PR. force push when branch/pr already exists.
       - name: Create PullRequest
         if: steps.git-check.outputs.modified == 'true'
         id: cpr
@@ -76,7 +80,7 @@ jobs:
           base: "develop"
           branch: "auto-pr/dotnet-format"
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          comitter: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           delete-branch: true
           commit-message: "[dotnet format] Automated changes"
           title: "[dotnet format] Automated changes"
@@ -85,7 +89,7 @@ jobs:
             dotnet format generated changes based on .editorconfig
 
             ## Stats
-            
+
             changed directories
 
             ```
@@ -110,8 +114,8 @@ jobs:
           labels: |
             automated pr
 
-        - name: Check outputs
-          if: steps.git-check.outputs.modified == 'true'
-          run: |
-            echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-bumber }}"
-            echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+      - name: Check outputs
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
