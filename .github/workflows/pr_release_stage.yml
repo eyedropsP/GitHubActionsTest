@@ -15,8 +15,8 @@ on:
         description: Select destination branch
         required: true
         options:
-        - main
         - stage
+        - main
 
 jobs:
   release_to_staging:
