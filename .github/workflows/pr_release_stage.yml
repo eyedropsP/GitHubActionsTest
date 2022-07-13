@@ -1,0 +1,25 @@
+name: release to stage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release_to_staging:
+    runs-on: ubuntu-latest
+    env:
+      GIT_PR_RELEASE_BRANCH_PRODUCTION: stage
+      GIT_PR_RELEASE_BRANCH_STAGING: develop
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby 3.1.2
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+      - name: Execute git-pr-release-to-stage
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_TEMPLATE: '.github/template/pr-release-template.erb'
+        run: |
+          gem install git-pr-release -v "2.1.1"
+          git remote set-url origin "https://${GITHUB_ACTOR}:${GIT_PR_RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git-pr-release || echo "Done."
