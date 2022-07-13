@@ -8,8 +8,8 @@ on:
         description: Select origin branch
         required: true
         options:
-        - stage
         - develop
+        - stage
       branch_to:
         type: choice
         description: Select destination branch
