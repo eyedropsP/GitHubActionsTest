@@ -2,13 +2,28 @@ name: release to stage
 
 on:
   workflow_dispatch:
+    inputs:
+      branch_from:
+        type: choice
+        description: Select origin branch
+        required: true
+        options:
+        - develop
+        - stage
+      branch_to:
+        type: choice
+        description: Select destination branch
+        required: true
+        options:
+        - stage
+        - main
 
 jobs:
   release_to_staging:
     runs-on: ubuntu-latest
     env:
-      GIT_PR_RELEASE_BRANCH_PRODUCTION: stage
-      GIT_PR_RELEASE_BRANCH_STAGING: develop
+      GIT_PR_RELEASE_BRANCH_STAGING: ${{ github.event.inputs.branch_from }}
+      GIT_PR_RELEASE_BRANCH_PRODUCTION: ${{ github.event.inputs.branch_to }}
     steps:
       - uses: actions/checkout@v1
       - name: Set up Ruby 3.1.2
