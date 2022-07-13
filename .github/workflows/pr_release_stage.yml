@@ -2,6 +2,21 @@ name: release to stage
 
 on:
   workflow_dispatch:
+    inputs:
+      branch_from:
+        type: choice
+        description: Select origin branch
+        required: true
+        options:
+        - stage
+        - develop
+      branch_to:
+        type: choice
+        description: Select destination branch
+        required: true
+        options:
+        - main
+        - stage
 
 jobs:
   release_to_staging:
