@@ -1,4 +1,4 @@
-name: release to stage
+name: release
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
         - main
 
 jobs:
-  release_to_staging:
+  release:
     runs-on: ubuntu-latest
     env:
       GIT_PR_RELEASE_BRANCH_STAGING: ${{ github.event.inputs.branch_from }}
